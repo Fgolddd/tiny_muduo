@@ -48,7 +48,7 @@ enum LogLevel { INFO, ERROR, FATAL, DEBUG };
 
 // 输出一个日志类 单例
 class Logger : noncopyable {
-  public:
+public:
     // 唯一的实例对象
     static Logger &instance();
     // 设置日志级别
@@ -56,7 +56,7 @@ class Logger : noncopyable {
     // 写日志
     void log(std::string msg);
 
-  private:
+private:
     int logLevel_;
     Logger() {}
 };
