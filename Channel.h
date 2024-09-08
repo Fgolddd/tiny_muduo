@@ -16,9 +16,58 @@ public:
 
     Channel(EventLoop *loop, int fd);
     ~Channel();
+    // fd得到poller通知后，处理事件的
     void handleEvent(Timestamp receiveTime);
 
+    // 设置回调函数对象
+    void setReadCallback(ReadEventCallback cb) {
+        readCallback_ = std::move(cb);
+    }
+    void setWriteCallback(EventCallback cb) { writeCallback_ = std::move(cb); }
+    void setCloseCallbask(EventCallback cb) { closeCallback_ = std::move(cb); }
+    void setErrorCallback(EventCallback cb) { errorCallback_ = std::move(cb); }
+
+    // 防止channel被remove掉还在执行回调函数
+    void tie(const std::shared_ptr<void> &);
+    int fd() const { return fd_; }
+    int events() const { return events_; }
+    void set_revents(int revt) { revents_ = revt; }
+    bool isNoneEvent() const { return events_ == kNoneEvent; }
+
+    // 设置fd相应的事件状态
+    void enableReading() {
+        events_ |= kReadEvent;
+        update();
+    }
+    void disableReading() {
+        events_ &= ~kReadEvent;
+        update();
+    }
+    void enableWriting() {
+        events_ |= kWriteEvent;
+        update();
+    }
+    void disableWriting() {
+        events_ &= ~kWriteEvent;
+        update();
+    }
+    void disableAll() {
+        events_ = kNoneEvent;
+        update();
+    }
+    bool isNoneEvent() const { return events_ == kNoneEvent; }
+    bool isReading() const { return events_ & kReadEvent; }
+    bool isWriting() const { return events_ & kWriteEvent; }
+
+    int index() { return index_; }
+    void set_index(int idx) { index_ = idx; }
+    EventLoop *ownerLoop() { return loop_; };
+    void remove();
+
 private:
+    void update();
+    void handleEventWithGuard(Timestamp receiveTime);
+
     static const int kNoneEvent;
     static const int kReadEvent;
     static const int kWriteEvent;
