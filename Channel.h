@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Timestamp.h"
-#include "noncopyable.h"
 #include <functional>
 #include <memory>
+
+#include "Timestamp.h"
+#include "noncopyable.h"
 
 class EventLoop;
 
@@ -32,7 +33,6 @@ public:
     int fd() const { return fd_; }
     int events() const { return events_; }
     void set_revents(int revt) { revents_ = revt; }
-    bool isNoneEvent() const { return events_ == kNoneEvent; }
 
     // 设置fd相应的事件状态
     void enableReading() {
