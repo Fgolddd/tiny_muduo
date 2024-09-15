@@ -15,6 +15,7 @@ public:
     int accept(InetAddress *peeraddr);
 
     void shutdownWrite();
+    static int createNonblockingOrDie();
 
     void setTcpNoDelay(bool on);
     void setReuseAddr(bool on);

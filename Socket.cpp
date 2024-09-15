@@ -3,6 +3,7 @@
 #include "Logger.h"
 
 #include <cstring>
+#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -34,6 +35,15 @@ void Socket::shutdownWrite() {
     if (::shutdown(sockfd_, SHUT_WR) < 0) {
         LOG_ERROR("Socket::shutdownWrite error!");
     }
+}
+
+int Socket::createNonblockingOrDie() {
+    int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
+                          IPPROTO_TCP);
+    if (sockfd < 0) {
+        LOG_FATAL("listen socket create failed!\n");
+    }
+    return sockfd;
 }
 
 void Socket::setTcpNoDelay(bool on) {
