@@ -7,8 +7,7 @@ EventLoopThreadPoll::EventLoopThreadPoll(EventLoop *baseLoop,
       next_(0) {}
 EventLoopThreadPoll::~EventLoopThreadPoll() {}
 
-void EventLoopThreadPoll::start(
-    const ThreadInitCallback &cb = ThreadInitCallback()) {
+void EventLoopThreadPoll::start(const ThreadInitCallback &cb) {
     started_ = true;
     for (int i = 0; i < numThreads_; i++) {
         char buf[name_.size() + 32];
