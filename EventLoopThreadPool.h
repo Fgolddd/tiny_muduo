@@ -9,11 +9,11 @@
 class EventLoop;
 class EventLoopThread;
 
-class EventLoopThreadPoll : noncopyable {
+class EventLoopThreadPool : noncopyable {
 public:
     using ThreadInitCallback = std::function<void(EventLoop *)>;
-    EventLoopThreadPoll(EventLoop *baseLoop, const std::string &nameArg);
-    ~EventLoopThreadPoll();
+    EventLoopThreadPool(EventLoop *baseLoop, const std::string &nameArg);
+    ~EventLoopThreadPool();
 
     void setThreadNum(int numThreads) { numThreads_ = numThreads; }
     void start(const ThreadInitCallback &cb = ThreadInitCallback());

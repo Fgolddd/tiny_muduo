@@ -1,13 +1,13 @@
-#include "EventLoopThreadPoll.h"
+#include "EventLoopThreadPool.h"
 #include "EventLoopThread.h"
 #include <memory>
-EventLoopThreadPoll::EventLoopThreadPoll(EventLoop *baseLoop,
+EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop,
                                          const std::string &nameArg)
     : baseLoop_(baseLoop), name_(nameArg), started_(false), numThreads_(0),
       next_(0) {}
-EventLoopThreadPoll::~EventLoopThreadPoll() {}
+EventLoopThreadPool::~EventLoopThreadPool() {}
 
-void EventLoopThreadPoll::start(const ThreadInitCallback &cb) {
+void EventLoopThreadPool::start(const ThreadInitCallback &cb) {
     started_ = true;
     for (int i = 0; i < numThreads_; i++) {
         char buf[name_.size() + 32];
@@ -24,7 +24,7 @@ void EventLoopThreadPoll::start(const ThreadInitCallback &cb) {
 }
 
 // 轮询方式分配channel
-EventLoop *EventLoopThreadPoll::getNextLoop() {
+EventLoop *EventLoopThreadPool::getNextLoop() {
     EventLoop *loop = baseLoop_;
 
     if (loops_.size()) {
@@ -33,7 +33,7 @@ EventLoop *EventLoopThreadPoll::getNextLoop() {
     }
     return loop;
 }
-std::vector<EventLoop *> EventLoopThreadPoll::getAllLoops() {
+std::vector<EventLoop *> EventLoopThreadPool::getAllLoops() {
     if (loops_.empty()) {
         return std::vector<EventLoop *>(1, baseLoop_);
     } else {
