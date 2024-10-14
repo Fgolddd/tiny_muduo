@@ -25,7 +25,7 @@ public:
         readCallback_ = std::move(cb);
     }
     void setWriteCallback(EventCallback cb) { writeCallback_ = std::move(cb); }
-    void setCloseCallbask(EventCallback cb) { closeCallback_ = std::move(cb); }
+    void setCloseCallback(EventCallback cb) { closeCallback_ = std::move(cb); }
     void setErrorCallback(EventCallback cb) { errorCallback_ = std::move(cb); }
 
     // 防止channel被remove掉还在执行回调函数
